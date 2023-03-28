@@ -4,18 +4,19 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import WifiCallingIcon from '@mui/icons-material/WifiCalling';
 import MarkunreadIcon from '@mui/icons-material/Markunread';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link } from 'react-router-dom'
-import { db, auth } from '../../Firebase/firebase';
+import { db, auth } from '../../Firebase/firebase'; 
 import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth"
 import { useNavigate } from "react-router-dom";
-
 const SignUp = () => {
     // const [value, setValue] = useState()
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [number, setNumber] = useState()
     const [password, setPassword] = useState('')
+    const [classActive, setClassActive] = useState('')
     const navigate = useNavigate()
     const Register = () => {
         createUserWithEmailAndPassword(auth, email, password)
@@ -52,10 +53,10 @@ const SignUp = () => {
                 </div>
                 <div className="input-div one">
                     <div className="i">
-                        <AccountCircleIcon className='form_icon' />
+                        <AccountCircleIcon className={`form_icon ${classActive=='name'? 'active':''}`} />
                     </div>
                     <div className="div">
-                        <input type="text" required className="input" placeholder='Enter Your Name'
+                        <input type="text" required className="input" onFocus={()=>{setClassActive('name')}} onBlur={()=>{setClassActive('')}} placeholder='Enter Your Name'
                             value={name} onChange={(e) => {
                                 setName(e.target.value)
                             }}
@@ -64,10 +65,10 @@ const SignUp = () => {
                 </div>
                 <div className="input-div one">
                     <div className="i">
-                        <WifiCallingIcon className='form_icon' />
+                        <WifiCallingIcon className={`form_icon ${classActive=='number'? 'active':''}`} />
                     </div>
                     <div className="div">
-                        <input  required type="Number" className="input" placeholder='Enter Your Number'
+                        <input  required type="Number" className="input" onFocus={()=>{setClassActive('number')}} onBlur={()=>{setClassActive('')}} placeholder='Enter Your Number'
                             value={number} onChange={(e) => {
                                 setNumber(e.target.value)
                             }}
@@ -78,10 +79,10 @@ const SignUp = () => {
 
                 <div className="input-div one">
                     <div className="i">
-                        <MarkunreadIcon className='form_icon' />
+                        <MarkunreadIcon className={`form_icon ${classActive=='email'? 'active':''}`} />
                     </div>
                     <div className="div">
-                        <input type="Email" required className="input" placeholder='Enter Your Email'
+                        <input type="Email" required className="input" onFocus={()=>{setClassActive('email')}} onBlur={()=>{setClassActive('')}} placeholder='Enter Your Email'
                             value={email} onChange={(e) => {
                                 setEmail(e.target.value)
                             }}
@@ -92,10 +93,10 @@ const SignUp = () => {
 
                 <div className="input-div one">
                     <div className="i">
-                        <VisibilityOffIcon className='form_icon' />
-                    </div>
+                        <VisibilityOffIcon className={`hidden ${classActive=='password'? 'active':''}`} /> 
+                        </div>
                     <div className="div">
-                        <input type="Password" required className="input" placeholder='Enter Your Password'
+                        <input id="password" type="Password" required className="input" onFocus={()=>{setClassActive('password')}} onBlur={()=>{setClassActive('')}} placeholder='Enter Your Password'
                             value={password} onChange={(e) => {
                                 setPassword(e.target.value)
                             }}

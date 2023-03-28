@@ -16,11 +16,7 @@ const Login = () => {
   const navigate = useNavigate()
 
   const LoginForm = () => {
-    if(email == 'admin@gmail.com'){
-      navigate('/admin/home')
-    }else{
-      navigate('/user/home/page')
-    }
+
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
@@ -34,10 +30,14 @@ const Login = () => {
               alert('VERIFICATION SENT SUCCESSFULLY TO YOUR GMAIL ACCOUNT .. !')
         })
         .catch((err) => console.log(err));
-                alert( "SignUp success");
-        } else {
-          navigate('/user/home/page')
-        }
+                alert( "Login success");
+        } else if(email == 'admin@gmail.com'){
+          
+            navigate('/admin/home')
+          }else{
+            navigate('/user/home/page')
+          }
+        
       })
       .catch((error) => {
         const errorCode = error.code;
