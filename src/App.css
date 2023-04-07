@@ -704,3 +704,7 @@
 .active {
   color: var(--mainGreen) !important;
 }
+
+.hidden{
+  display: none;
+}

@@ -5,7 +5,7 @@ import Order from '../../Components/Order/Order'
 function AdminOrders() {
   return (
     <>
-      <Navbar />
+      <Navbar backBtn={'true'} loc={"Check Orders"} />
       <Order />
     </>
   )

@@ -5,7 +5,7 @@ import apple_img from '../../Assets/Images/apple.png'
 function AdminHome() {
   return (
     <div>
-      <Navbar />
+      <Navbar backBtn={'false'} loc={"Home"} />
       <div className='admin_home_div'>
         <h3>All Products</h3>
 

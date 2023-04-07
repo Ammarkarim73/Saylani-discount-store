@@ -5,14 +5,14 @@ import { getFirestore } from "firebase/firestore";
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyA-c64sZi9OMSxd62x7Uqqrr5q7j9twqp8",
-    authDomain: "saylani-discount-store.firebaseapp.com",
-    projectId: "saylani-discount-store",
-    storageBucket: "saylani-discount-store.appspot.com",
-    messagingSenderId: "894053857018",
-    appId: "1:894053857018:web:1d273446b2eea6916f3b43",
-    measurementId: "G-WMV8VB2385"
-  };
+  apiKey: "AIzaSyDNrxeD-n1IqPIRsz1SO1fhVQM5NyHjNuw",
+  authDomain: "saylani-discount-store-4a77b.firebaseapp.com",
+  projectId: "saylani-discount-store-4a77b",
+  storageBucket: "saylani-discount-store-4a77b.appspot.com",
+  messagingSenderId: "250388014070",
+  appId: "1:250388014070:web:3a49dba708c8c4508bddd7",
+  measurementId: "G-M09JD22TN1"
+};
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);

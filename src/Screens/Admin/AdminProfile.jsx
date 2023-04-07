@@ -5,7 +5,7 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import fruits from '../../Assets/Images/fruits.png'
-import { Footer } from '../../Components/index'
+import { Footer, Navbar } from '../../Components/index'
 
 function AdminProfile() {
   const [fileList, setFileList] = useState([]);
@@ -27,7 +27,9 @@ function AdminProfile() {
     imgWindow?.document.write(image.outerHTML);
   };
   return (
+    <>
     <div>
+      <Navbar backBtn={'true'} loc={"Profile"} />
       <div className='profile_main_div'>
         <h1 style={{ fontSize: '40px', color: 'blue' }}>Setting</h1>
         <img className='profile_img' src={profile} alt="" />
@@ -70,6 +72,7 @@ function AdminProfile() {
       </div>
       <Footer />
     </div>
+    </>
   )
 }
 

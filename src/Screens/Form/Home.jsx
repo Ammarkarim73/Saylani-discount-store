@@ -12,7 +12,7 @@ function Home() {
           <p>ONLINE DISCOUNT STORE</p>
         </div>
         <div className="signup_button_div">
-          <button className='get_Started_button'> <Link to='/register'className='link'  > GET STARTED</Link> </button>
+          <button className='get_Started_button'> <Link to='/Login'className='link'  > GET STARTED</Link> </button>
         </div>
       </div>
     </>  

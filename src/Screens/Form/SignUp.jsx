@@ -4,44 +4,27 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import WifiCallingIcon from '@mui/icons-material/WifiCalling';
 import MarkunreadIcon from '@mui/icons-material/Markunread';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link } from 'react-router-dom'
-import { db, auth } from '../../Firebase/firebase'; 
-import { doc, setDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth"
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth"
 import { useNavigate } from "react-router-dom";
 const SignUp = () => {
-    // const [value, setValue] = useState()
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [number, setNumber] = useState()
     const [password, setPassword] = useState('')
     const [classActive, setClassActive] = useState('')
     const navigate = useNavigate()
+    const auth = getAuth()
     const Register = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 const user = userCredential.user;
                 const id = user.uid
-                await setDoc(doc(db, 'users', user.uid), {
-                    name: name,
-                    email: email,
-                    password: password,
-                    number: number,
-                    id: id
-                });
-                sendEmailVerification(auth.currentUser)
-                    .then(() => {
-                        alert('VERIFICATION SENT SUCCESSFULLY TO YOUR GMAIL ACCOUNT .. !')
-                        navigate('/login')
-                    })
-                    .catch((err) => console.log(err));
                 alert("SignUp success");
+                    navigate('/login');
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(error)
+                alert(error.message)
             });
     }
     return (
@@ -53,7 +36,7 @@ const SignUp = () => {
                 </div>
                 <div className="input-div one">
                     <div className="i">
-                        <AccountCircleIcon className={`form_icon ${classActive=='name'? 'active':''}`} />
+                        <AccountCircleIcon className={`form_icon ${classActive==='name'? 'active':''}`} />
                     </div>
                     <div className="div">
                         <input type="text" required className="input" onFocus={()=>{setClassActive('name')}} onBlur={()=>{setClassActive('')}} placeholder='Enter Your Name'
@@ -65,7 +48,7 @@ const SignUp = () => {
                 </div>
                 <div className="input-div one">
                     <div className="i">
-                        <WifiCallingIcon className={`form_icon ${classActive=='number'? 'active':''}`} />
+                        <WifiCallingIcon className={`form_icon ${classActive==='number'? 'active':''}`} />
                     </div>
                     <div className="div">
                         <input  required type="Number" className="input" onFocus={()=>{setClassActive('number')}} onBlur={()=>{setClassActive('')}} placeholder='Enter Your Number'
@@ -79,7 +62,7 @@ const SignUp = () => {
 
                 <div className="input-div one">
                     <div className="i">
-                        <MarkunreadIcon className={`form_icon ${classActive=='email'? 'active':''}`} />
+                        <MarkunreadIcon className={`form_icon ${classActive==='email'? 'active':''}`} />
                     </div>
                     <div className="div">
                         <input type="Email" required className="input" onFocus={()=>{setClassActive('email')}} onBlur={()=>{setClassActive('')}} placeholder='Enter Your Email'
@@ -93,7 +76,7 @@ const SignUp = () => {
 
                 <div className="input-div one">
                     <div className="i">
-                        <VisibilityOffIcon className={`hidden ${classActive=='password'? 'active':''}`} /> 
+                        <VisibilityOffIcon className={`form_icon ${classActive==='password'? 'active':''}`} /> 
                         </div>
                     <div className="div">
                         <input id="password" type="Password" required className="input" onFocus={()=>{setClassActive('password')}} onBlur={()=>{setClassActive('')}} placeholder='Enter Your Password'
@@ -106,7 +89,7 @@ const SignUp = () => {
                 </div>
                 <div className="get_Started_button_div">
                     <button className='get_Started_button' onClick={Register}> Sign Up</button>
-                    <p className="already_account"> <Link to='/login' className='link_login' >Already Have an account? Login</Link> </p></div>
+                    <p className="already_account"> Already Have an account? <Link to='/login' className='link_login' >Login</Link> </p></div>
 
             </div>
         </>

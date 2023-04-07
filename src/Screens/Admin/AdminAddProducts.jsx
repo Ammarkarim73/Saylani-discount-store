@@ -49,7 +49,7 @@ function AdminAddProducts() {
   }
   return (
     <div>
-      <Navbar />
+      <Navbar backBtn={'true'} loc={"Items"} />
       <div>
         <h2 className='Add_item_heading'>Add New Item</h2>
         <div className='camera_main_div'>
