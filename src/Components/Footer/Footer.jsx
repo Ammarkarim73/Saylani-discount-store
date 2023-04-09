@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 function Footer() {
     const getLocation = window?.location?.pathname
     return (
-        
+        <div id="bms-root">
         <div className="footer_main_div">
             <Link to='/admin/home'>
                 <div className="footer_inner_div">
@@ -25,6 +25,7 @@ function Footer() {
                 <p className={getLocation === "/admin/profile/setting" ? "active" : "footer_icon"}> Account </p>
             </div>
             </Link>
+        </div>
         </div>
     )
 }

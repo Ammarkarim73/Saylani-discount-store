@@ -1,77 +1,221 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import profile from '../../Assets/Images/Profile.png'
 import CheckIcon from '@mui/icons-material/Check';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { Upload } from 'antd';
+import { Image, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import fruits from '../../Assets/Images/fruits.png'
 import { Footer, Navbar } from '../../Components/index'
+import { collection, setDoc, doc, getDoc, updateDoc, } from "firebase/firestore";
+import { db } from '../../Firebase/firebase';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { CheckCircleOutline } from '@mui/icons-material';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 
 function AdminProfile() {
   const [fileList, setFileList] = useState([]);
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-  const onPreview = async (file) => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
+  const [fileUrl, setFileUrl] = useState('');
+  const [classActive, setClassActive] = useState('')
+  const [alert, showAlert] = useState(false)
+  const [alertMsg, setAlertMsg] = useState('')
+  const [name, setName] = useState('')
+  const navigate = useNavigate()
+
+
+
+  const upload = async (fileList) => {
+    // setFileList(fileList);
+
+    // profile Upload
+    const uploadFiles = (file) => {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage();
+        const storageRef = ref(storage, `Admin/admin.png`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            let upLoad = "Upload is " + progress + "% done";
+            if (upLoad == "Upload is 100% done") {
+
+              showAlert(true)
+              setAlertMsg("Picture Uploaded Successfully..!")
+          
+              setTimeout(() => {
+                showAlert(false)
+              }, 3000);
+
+              console.log('Picture Uploaded Successfully..!')
+            } else {
+
+
+              showAlert(true)
+              setAlertMsg(progress + '% Uploaded')
+
+                console.log('Uploading ' + progress + '% done')
+
+            }
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            reject(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+
+              // document.querySelector("#showPic").style.backgroundImage = `url(${downloadURL})`;
+
+              console.log(resolve(downloadURL));
+
+
+            });
+          }
+        );
       });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+    };
+    // profile upload
+
+
+
+    let url = await uploadFiles(fileList.files[0]);
+    setFileUrl(url);
+    const washingtonRef = doc(db, "Admin", "admin");
+    await updateDoc(washingtonRef, {
+      profile: url,
+    });
+
   };
+
+
+const signout = () => {
+  const auth = getAuth();
+  signOut(auth).then(() => {
+    showAlert(true)
+    setAlertMsg("Signed Out Successfully..!")
+    }).catch((error) => {
+    console.log(error.message);
+    // An error happened.
+    });
+}
+
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      const docSnap = await getDoc(doc(db, "Admin", "admin"));
+      setName(docSnap.data().username)
+      setFileUrl(docSnap.data().profile)
+      if (user) {
+
+      } else {
+        // User is signed out
+        // ...
+        navigate('/login');
+      }
+    });
+  })
+
+  const addDataToFirestore = async (name) => {
+
+
+    try {
+      const docRef = await setDoc(doc(db, "Admin", 'admin'), {
+        username: name
+      });
+      showAlert(true)
+      setAlertMsg('Your Name Has Been Saved')
+  
+      setTimeout(() => {
+        showAlert(false)
+      }, 3000);
+      console.log("Username & email written in database");
+    } catch (e) {
+      showAlert(true)
+      setAlertMsg('Error While Saving Name' + e.message)
+      console.error("Error adding document: ", e);
+    }
+  }
+
   return (
     <>
-    <div>
-      <Navbar backBtn={'true'} loc={"Profile"} />
-      <div className='profile_main_div'>
-        <h1 style={{ fontSize: '40px', color: 'blue' }}>Setting</h1>
-        <img className='profile_img' src={profile} alt="" />
-      </div>
-      <div className="input-div one">
-        <div className="i">
-          <CheckIcon className='form_icon' />
-        </div>
-        <div className="div">
-          <input type="text" className="input" placeholder='Update Your Name' />
-        </div>
-      </div>
-      <div className='camera_main_div'>
-        {/* <img className='admin_camera' src={camera_img} alt="" /> */}
-        {/* <CameraAltIcon className='camera_icon' /> */}
-        <ImgCrop rotate>
-          <Upload
-            listType="picture-card"
-            fileList={fileList}
-            onChange={onChange}
-            onPreview={onPreview}
-          >
-            {fileList.length < 5 && <div style={{ width: '0' }}><CameraAltIcon className='camera_icon' /></div>}
-          </Upload>
-        </ImgCrop>
-      </div>
-      <div className='unit_name_div'>
-        <input type="text" className='inp unit_inp' placeholder='Pkr' />
-        <button style={{ color: 'white', border: 'none', borderRadius: '10px', width: '20%', backgroundColor: '#61B846', fontSize: '20px' }}>Add</button>
-      </div>
       <div>
-        <h1 style={{ color: 'blue', marginLeft: '15%' }}>All Category</h1>
-        <div className='category_div' style={{ backgroundColor: 'white', border: '1px solid #61B846', height: '15vh' }}>
-          <img src={fruits} alt="" />
-          <span style={{ color: '#61B846', fontWeight: 'bold' }}>Fruits</span>
+        <Navbar backBtn={'true'} loc={"Profile"} alert={alert} alertMsg={alertMsg} />
+        <div className='profile_main_div'>
+          <h1 style={{ fontSize: '40px', color: 'blue' }}>Profile</h1>
+            <div className="flexcol">
+              <img onClick={()=>{window.open(fileUrl)}} src={fileUrl?fileUrl:profile} id="showPic" className="picture" />
+
+              <label id="label" htmlFor="file" > + UPLOAD PICTURE
+                <input id="file" onChange={(e)=>{upload(e.target)}} style={{display: 'none'}} type="file" accept="image/*" />
+              </label>
+            </div>
         </div>
+
+        <div className="input-div one">
+          <div className="i">
+            <CheckCircleOutline className={classActive}
+              onClick={() => {
+                if (name) {
+                  addDataToFirestore(name);
+                } else {
+                  showAlert(true)
+                  setAlertMsg("Name Can't Be Empty !!!")
+                }
+                setClassActive('active');
+              }} />
+          </div>
+          <div className="div">
+            <input required type="text" onChange={(e) => {
+              setName(e.target.value)
+              showAlert(false)
+              setClassActive('')
+            }} className="input" placeholder='<--Update || Enter Your Name' />
+          </div>
+        </div>
+
+        <div className='profile_main_div'>
+          <h1 style={{ color: 'blue', marginLeft: '15%' }}>Active Orders</h1>
+          <div className="order_inner_div">
+                    <h3 className='user_name'>Nawaz-uddin</h3>
+                    <div className="status_div">
+                        <p> Just Now - Pending</p>
+                        <p>03208908424</p>
+                    </div>
+                    <div className="item_name_div">
+                        <p>2 x ITEM NAME</p>
+                        <p>3 x ITEM NAME </p>
+                    </div>
+                    <div className="items_total_div">
+                        <p><b>Total</b></p>
+                        <p className="item_price" >$185</p>
+                    </div>
+                    <div className='inputs_div2'>
+                        <select className='inp select_inp ' name="cars" id="cars">
+                            <option value="volvo" className="select_inp" >Change status</option>
+                            <option value="saab" className="select_inp" >Saab</option>
+                            <option value="mercedes" className="select_inp" >Mercedes</option>
+                            <option value="audi" className="select_inp" >Audi</option>
+                        </select>
+                    </div>
+                </div>
+        </div>
+        <div className="signup_button_div" style={{ margin: '20px auto', textAlign: 'center' }}>
+          <button className='get_Started_button' onClick={()=>{signout()}} style={{ color: 'white' }}>Logout</button>
+        </div>
+  
+        <Footer />
       </div>
-      <div className="signup_button_div" style={{ margin: '20px auto', textAlign: 'center' }}>
-        <button className='get_Started_button' style={{ color: 'white' }}>Logout</button>
-      </div>
-      <Footer />
-    </div>
     </>
   )
 }
