@@ -573,9 +573,16 @@
 
 .card_main_div {
   border: 1px solid var(--mainGreen);
+  margin-top: 8px;
+  margin-bottom: 8px;
   border-radius: 15px;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
+}
+
+span{
+  cursor: pointer;
 }
 
 .product_main_div {
@@ -597,6 +604,7 @@
 
 .card_main_div .card_img {
   width: 140px;
+  border-radius: 15px;
   height: auto;
 }
 

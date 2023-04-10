@@ -22,6 +22,7 @@ import Person2Icon from '@mui/icons-material/Person2';
 import { PlaylistAddCheckCircle, SettingsPhoneTwoTone } from '@mui/icons-material';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../Firebase/firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 // rect drawer mui
 
@@ -33,15 +34,25 @@ function Navbar(props) {
   let pic;
 
   const getUserFromDataBase = async () => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      const docSnap = await getDoc(doc(db, "Admin", "admin"));
+      setPersonName(docSnap.data().username)
+      setFileUrl(docSnap.data().profile)
+      if (user) {
 
-    const docSnap = await getDoc(doc(db, "Admin", "admin"));
-    setPersonName(docSnap.data().username)
-    setFileUrl(docSnap.data().profile)
+      } else {
+        // User is signed out
+        // ...
+        navigate('/login');
+      }
+    });
   }
-
+  
+  
   useEffect(() => {
     getUserFromDataBase()
-  }, [""])
+  })
 
 
 

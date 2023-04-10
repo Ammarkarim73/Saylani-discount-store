@@ -116,21 +116,14 @@ const signout = () => {
       const docSnap = await getDoc(doc(db, "Admin", "admin"));
       setName(docSnap.data().username)
       setFileUrl(docSnap.data().profile)
-      if (user) {
-
-      } else {
-        // User is signed out
-        // ...
-        navigate('/login');
-      }
     });
-  })
+  },[""])
 
   const addDataToFirestore = async (name) => {
 
 
     try {
-      const docRef = await setDoc(doc(db, "Admin", 'admin'), {
+      const docRef = await updateDoc(doc(db, "Admin", 'admin'), {
         username: name
       });
       showAlert(true)
@@ -139,7 +132,7 @@ const signout = () => {
       setTimeout(() => {
         showAlert(false)
       }, 3000);
-      console.log("Username & email written in database");
+      console.log("Username written in database");
     } catch (e) {
       showAlert(true)
       setAlertMsg('Error While Saving Name' + e.message)
@@ -165,8 +158,11 @@ const signout = () => {
         <div className="input-div one">
           <div className="i">
             <CheckCircleOutline className={classActive}
-              onClick={() => {
-                if (name) {
+              onClick={(e) => {
+                const abc = e.target.parentElement.nextElementSibling.childNodes[0];
+                setName(abc.value)
+                
+                if (abc.value != '') {
                   addDataToFirestore(name);
                 } else {
                   showAlert(true)
@@ -176,16 +172,15 @@ const signout = () => {
               }} />
           </div>
           <div className="div">
-            <input required type="text" onChange={(e) => {
-              setName(e.target.value)
+            <input type="text" onChange={(e) => {
               showAlert(false)
               setClassActive('')
             }} className="input" placeholder='<--Update || Enter Your Name' />
           </div>
         </div>
 
-        <div className='profile_main_div'>
-          <h1 style={{ color: 'blue', marginLeft: '15%' }}>Active Orders</h1>
+        <div className='admin_order_main_div'>
+          <h1 style={{ color: 'blue'}}>Active Orders</h1>
           <div className="order_inner_div">
                     <h3 className='user_name'>Nawaz-uddin</h3>
                     <div className="status_div">
