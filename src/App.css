@@ -163,6 +163,12 @@
   border-radius: 10px;
   cursor: pointer;
   font-size: 20px;
+  transition: 0.1s linear;
+}
+
+.get_Started_button:hover {
+  background-color: var(--Light_blue);
+  box-shadow: 0px 0px 8px 3px var(--mainGreen);
 }
 
 .already_account {
@@ -572,13 +578,19 @@
 }
 
 .card_main_div {
-  border: 1px solid var(--mainGreen);
+  border: 2px solid var(--mainGreen);
   margin-top: 8px;
   margin-bottom: 8px;
   border-radius: 15px;
-  display: flex;
-  justify-content: space-between;
+  height: 100px;
+  /* display: flex;
+  justify-content: space-between; */
   cursor: pointer;
+}
+
+.card_main_div:hover {
+  border: 2px solid var(--blue);
+  box-shadow: 0px 0px 26px 8px inset gray;
 }
 
 span{
@@ -588,6 +600,7 @@ span{
 .product_main_div {
   margin-left: 10px;
   margin-top: 2px;
+  width: 80%;
 }
 
 .product_rate {
@@ -603,9 +616,9 @@ span{
 }
 
 .card_main_div .card_img {
-  width: 140px;
+  width: 145px;
   border-radius: 15px;
-  height: auto;
+  height: 100px;
 }
 
 .product_cost {
@@ -722,12 +735,25 @@ span{
   flex-direction: column;
 }
 
+.flexrow {
+  display: flex;
+  justify-content: center;
+}
+
 .picture{
   width: 125px;
   height: 125px;
-  margin: auto auto 50px auto;
+  margin: auto auto 10px auto;
   border-radius: 50%;
 }
+
+#showProductPic{
+  width: 125px;
+  height: 125px;
+  margin-bottom: 10px;
+  border-radius: 0px;
+}
+
 
 .picture:hover{
   content: "See Picture";
@@ -742,6 +768,7 @@ span{
   background-color: var(--mainGreen);
   color: whitesmoke;
   margin: auto;
+  margin-bottom: 10px;
   background-size: 100%;
   border: 2px solid var(--mainGreen);
   font-weight: bold;
@@ -749,8 +776,33 @@ span{
 }
 
 #label:hover{
-  border: 4px solid var(--Light_blue);
+  box-shadow: 0px 0px 8px 3px var(--mainGreen);
+  background-color: var(--Light_blue);
+  border: 2px solid var(--Light_blue);
+  cursor: pointer;
+}
+
+#productLabel{
+  width: 115px;
+  height: 115px;
+  /* margin: auto; */
+  margin-bottom: 10px;
+  margin-left: 10px;
+  font-size: 40px;
+  background-size: 100%;
+  border: 1px solid var(--grey);
   transition: 0.2s linear;
+  background-image: url(./Assets/Images/camera_img.png);
+  display: grid;
+  text-align: center;
+  font-weight: bolder;
+  align-content: center;
+  align-items: center;
+}
+
+#productLabel:hover{
+  box-shadow: 0px 0px 8px 3px var(--mainGreen);
+  border: 1px solid var(--Light_blue);
   cursor: pointer;
 }
 
@@ -759,4 +811,26 @@ span{
   bottom: 0px;
   height: 100%;
   position: sticky;
+}
+
+.mark{
+  border: 2px solid var(--Light_blue);
+}
+
+
+.categoryBar{
+  display: flex;
+  justify-content: space-between;
+}
+
+.productPrice{
+  text-align: right;
+  width: 100%;
+  color: grey;
+  font-weight: bold;
+}
+
+.productPrice p{
+  margin: 0px;
+  margin-right: 5px;
 }
