@@ -1,57 +1,64 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Footer } from '../../Components'
-import Navbar from '../../Components/Navbar/Navbar'
-import fruit_img from '../../Assets/Images/fruits.jpg'
-import vegetable_img from '../../Assets/Images/vegetable.png'
-import grocery_img from '../../Assets/Images/shop_grocery.jpeg'
-import meat_img from '../../Assets/Images/meat.jpeg'
 import CategoryBar from '../../Components/CategoryBar/CategoryBar'
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore'
+import itemImg from '../../Assets/Images/item.png'
+import { db } from '../../Firebase/firebase'
 
 export default function Grocery() {
+
+  const [itemName, setItemName] = useState('')
+  const [unitName, setUnitName] = useState('')
+  const [quantity, setQuantity] = useState('')
+  const [unitPrice, setPrice] = useState('')
+  const [url, setUrl] = useState('')
+
+  const getData = async () => {
+    let div = document.getElementById("products");
+
+    const docSnap = await getDocs(collection(db, "Grocery Items"));
+
+    docSnap.forEach((doc) => {
+      setItemName(doc.data().ItemName)
+      setUnitName(doc.data().UnitName)
+      setPrice(doc.data().UnitPrice)
+      setQuantity(doc.data().Quantity)
+      setUrl(doc.data().ImageUrl)
+
+      div.innerHTML +=
+        `<div class='card_main_div'>
+    <div class='product_card_div'>
+      <img class='card_img' src=${doc.data().ImageUrl ? doc.data().ImageUrl : itemImg} />
+      <div class='product_main_div'>
+        <p class='product_name'>${doc.data().ItemName}</p>
+        <div class='productPrice'>
+        <p> Price: ${doc.data().UnitPrice} RS</p>
+        </div>
+        <div class='productQuantity'>
+        <p> Quantity: ${doc.data().Quantity} ${doc.data().UnitName}</p>
+        </div>
+
+   </div>
+   </div>
+   </div>`;
+    })
+  }
+
+
+
+  useEffect(() => {
+    getData();
+  }, [""])
+
+
   return (
     <div>
-    <CategoryBar backBtn={'true'} loc={"Grocery Items"} />
-    <div className='admin_home_div'>
-      <h3>Grocery Items</h3>
+      <CategoryBar backBtn={'true'} loc={"Grocery Items"} />
+      <div id='products' className='admin_home_div'>
+        <h3>Grocery Items</h3>
 
-      <div className='card_main_div'>
-        <div className='product_card_div'>
-          <img className='card_img' src={fruit_img} />
-          <div className='product_main_div'>
-            <p className='product_name'>Fruits</p>
-          </div>
-        </div>
       </div>
-
-      <div className='card_main_div'>
-        <div className='product_card_div'>
-          <img className='card_img' src={vegetable_img} />
-          <div className='product_main_div'>
-            <p className='product_name'>Vegetables</p>
-          </div>
-        </div>
-      </div>
-
-      <div className='card_main_div'>
-        <div className='product_card_div'>
-          <img className='card_img' src={meat_img} />
-          <div className='product_main_div'>
-            <p className='product_name'>Meat</p>
-          </div>
-        </div>
-      </div>
-
-      <div className='card_main_div'>
-        <div className='product_card_div'>
-          <img className='card_img' src={grocery_img} />
-          <div className='product_main_div'>
-            <p className='product_name'>Groceries Items</p>
-          </div>
-        </div>
-      </div>
-
+      <Footer />
     </div>
-    <Footer/>
-  </div>
   )
 }

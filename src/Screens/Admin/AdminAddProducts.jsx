@@ -7,7 +7,7 @@ import { db } from '../../Firebase/firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 
 function AdminAddProducts() {
-    const [fileUrl, setFileUrl] = useState('');
+    // const [fileUrl, setFileUrl] = useState('');
     // const [itemName, setItemName] = useState('')
     // const [dropDown, setDropDown] = useState('')
     // const [description, setDescription] = useState('')
@@ -16,6 +16,7 @@ function AdminAddProducts() {
     // const [unitPrice, setPrice] = useState('')
     const [alert, showAlert] = useState(false)
     const [alertMsg, setAlertMsg] = useState('')
+    let fileUrl;
   
 
 
@@ -70,7 +71,7 @@ function AdminAddProducts() {
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 
-              // document.querySelector("#showPic").style.backgroundImage = `url(${downloadURL})`;
+              document.querySelector("#showProductPic").style.backgroundImage = `url(${downloadURL})`;
 
               console.log(resolve(downloadURL));
 
@@ -85,13 +86,12 @@ function AdminAddProducts() {
 
 
     let url = await uploadFiles(fileList.files[0]);
-    setFileUrl(url)
+    fileUrl = url;
 
   }
   
   const addProduct = async (url) => {
     let category = document.getElementById('dropDown').value;
-    if(category){
     let date = new Date()
     let name = document.getElementById('itemName').value;
     let desc = document.getElementById('description').value;
@@ -114,7 +114,6 @@ function AdminAddProducts() {
       // setDescription('')
       // setUnitName('')
       // setPrice('')
-    }
 }
 
 
@@ -127,7 +126,7 @@ function AdminAddProducts() {
         {/* Product Image */}
 
         <div className="flexrow">
-            <img onClick={() => { window.open(fileUrl?fileUrl:profile) }} src={fileUrl ? fileUrl:profile} id="showProductPic" />
+            <img id="showProductPic" onClick={() => { window.open(fileUrl?fileUrl:profile) }} src={fileUrl ? fileUrl:profile} />
 
 
             <label id="productLabel" htmlFor="file" > +
