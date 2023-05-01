@@ -2,25 +2,36 @@ import React, { useEffect, useState } from 'react';
 import profile from '../../Assets/Images/item.png'
 import { Navbar } from '../../Components'
 import { Footer } from '../../Components/index'
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc } from "firebase/firestore";
 import { db } from '../../Firebase/firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import Swal from 'sweetalert2';
 
 function AdminAddProducts() {
-    // const [fileUrl, setFileUrl] = useState('');
-    // const [itemName, setItemName] = useState('')
-    // const [dropDown, setDropDown] = useState('')
-    // const [description, setDescription] = useState('')
-    // const [unitName, setUnitName] = useState('')
-    // const [quantity, setQuantity] = useState('')
-    // const [unitPrice, setPrice] = useState('')
-    const [alert, showAlert] = useState(false)
-    const [alertMsg, setAlertMsg] = useState('')
-    let fileUrl;
-  
+  const [fileUrl, setFileUrl] = useState('');
+  const [itemName, setItemName] = useState('')
+  const [dropDown, setDropDown] = useState('')
+  const [description, setDescription] = useState('')
+  const [unitName, setUnitName] = useState('')
+  const [quantity, setQuantity] = useState('')
+  const [unitPrice, setPrice] = useState('')
+  const [alert, showAlert] = useState(false)
+  const [alertMsg, setAlertMsg] = useState('')
 
 
-  
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
+
+
   const upload = async (fileList) => {
     // setFileList(fileList);
 
@@ -86,61 +97,67 @@ function AdminAddProducts() {
 
 
     let url = await uploadFiles(fileList.files[0]);
-    fileUrl = url;
+    setFileUrl(url)
 
   }
-  
-  const addProduct = async (url) => {
-    let category = document.getElementById('dropDown').value;
+
+  const addProduct = async () => {
     let date = new Date()
-    let name = document.getElementById('itemName').value;
-    let desc = document.getElementById('description').value;
-    let unit = document.getElementById('unitName').value;
-    let quantity = document.getElementById('quantity').value;
-    let price = document.getElementById('unitPrice').value;
-    console.log(category)
-    await addDoc(collection(db, category), {
-        ItemName: name,
-        ImageUrl: url,
-        Category:category,
-        Description:desc,
-        UnitName:unit,
-        Quantity:quantity,
-        UnitPrice:price,
+    if (itemName && dropDown && description && unitName && quantity && unitPrice) {
+      await addDoc(collection(db, dropDown), {
+        ItemName: itemName,
+        ImageUrl: fileUrl,
+        Category: dropDown,
+        Description: description,
+        UnitName: unitName,
+        Quantity: quantity,
+        UnitPrice: unitPrice,
         timestamp: date,
-      });
-      // setItemName('')
-      // setDropDown('')
-      // setDescription('')
-      // setUnitName('')
-      // setPrice('')
-}
+      }) 
+      setItemName('')
+      setDropDown('')
+      setDescription('')
+      setUnitName('')
+      setQuantity('')
+      setPrice('')
+    } else {
+      Toast.fire({
+        icon: 'error',
+        title: 'Please Input All Fields !!!'
+      })
+    }
+  }
+
+
+
 
 
   return (
     <div>
-      <Navbar backBtn={'true'} loc={"Items"} />
+      <Navbar backBtn={'true'} loc={"Items"} alert={alert} alertMsg={alertMsg} />
       <div>
         <h2 className='Add_item_heading'>Add New Item</h2>
+
 
         {/* Product Image */}
 
         <div className="flexrow">
-            <img id="showProductPic" onClick={() => { window.open(fileUrl?fileUrl:profile) }} src={fileUrl ? fileUrl:profile} />
+          <img id="showProductPic" onClick={() => { window.open(fileUrl ? fileUrl : profile) }} src={fileUrl ? fileUrl : profile} />
 
 
-            <label id="productLabel" htmlFor="file" > +
-              <input id="file" onChange={(e) => { upload(e.target) }} style={{ display: 'none' }} type="file" accept="image/*" />
-            </label>
-          </div>
+          <label id="productLabel" htmlFor="file" > +
+            <input id="file" onChange={(e) => { upload(e.target) }} style={{ display: 'none' }} type="file" accept="image/*" />
+          </label>
+        </div>
 
         {/* Product Image */}
 
         <div className='inputs_div'>
-          <input type="text" id='itemName' className='inp' placeholder='Item Name' />
+          <input type="text" onChange={(e) => { setItemName(e.target.value) }} id='itemName' className='inp' placeholder='Item Name' />
         </div>
         <div className='inputs_div'>
-          <select className='inp' id='dropDown' >
+          <select className='inp' onChange={(e) => { setDropDown(e.target.value) }} id='dropDown' >
+            <option>Select Category</option>
             <option value='Meat'>Meat</option>
             <option value="Grocery Items">Grocery Items</option>
             <option value="Fruit">Fruit</option>
@@ -148,12 +165,13 @@ function AdminAddProducts() {
           </select>
         </div>
         <div className='inputs_div'>
-          <textarea className='text_area' id='description' placeholder='Description this Item' rows="6" cols="50" />
+          <textarea onChange={(e) => { setDescription(e.target.value) }} className='text_area' id='description' placeholder='Description this Item' rows="6" cols="50" />
         </div>
         <div className='unit_name_div'>
           <span style={{ color: 'blue', fontSize: '25px' }}>Unit Name:</span>
           {/* <input value={unitName} onChange={(e)=> setUnitName(e.target.value)} type="text" className='inp unit_inp' placeholder='Pcs./kg/dozen' /> */}
-          <select className='inp unit_inp' id='unitName' >
+          <select onChange={(e) => { setUnitName(e.target.value) }} className='inp unit_inp' id='unitName' >
+            <option>Select Unit</option>
             <option value='KG'>KG</option>
             <option value="DOZEN">DOZEN</option>
             <option value="LITER">LITER</option>
@@ -162,14 +180,14 @@ function AdminAddProducts() {
         </div>
         <div className='unit_name_div'>
           <span style={{ color: 'blue', fontSize: '25px' }}>Quantity:</span>
-          <input id='quantity' type="number" className='inp unit_inp' placeholder='eg. 2 Kg, 4 kg' />
+          <input onChange={(e) => { setQuantity(e.target.value) }} id='quantity' type="number" className='inp unit_inp' placeholder='eg. 2 Kg, 4 kg' />
         </div>
         <div className='unit_name_div'>
           <span style={{ color: 'blue', fontSize: '25px' }}>Unit Price:</span>
-          <input id='unitPrice' type="number" className='inp unit_inp' placeholder='Pkr' />
+          <input onChange={(e) => { setPrice(e.target.value) }} id='unitPrice' type="number" className='inp unit_inp' placeholder='Pkr' />
         </div>
         <div className="signup_button_div" style={{ margin: '20px auto', textAlign: 'center' }}>
-          <button className='get_Started_button' style={{ color: 'white' }} onClick={addProduct(fileUrl)}>Add Product</button>
+          <button className='get_Started_button' style={{ color: 'white' }} onClick={() => { addProduct() }}>Add Product</button>
         </div>
       </div>
       <Footer />
