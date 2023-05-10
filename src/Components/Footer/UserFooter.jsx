@@ -8,10 +8,10 @@ function UserFooter() {
     const getLocation = window?.location?.pathname
     return (
         <div className="footer_main_div">
-            <Link to='/user/home/page' className="link">
+            <Link to='/user/home' className="link">
                 <div className="footer_inner_div">
-                    <HomeIcon className={getLocation === "/user/home/page" ? "active" : "footer_icon"} />
-                    <p className={getLocation === "/user/home/page" ? "active" : "footer_icon"}> Home </p>
+                    <HomeIcon className={getLocation === "/user/home" ? "active" : "footer_icon"} />
+                    <p className={getLocation === "/user/home" ? "active" : "footer_icon"}> Home </p>
                 </div>
             </Link>
             <Link to='/user/shopping/cart' className="link" >

@@ -23,7 +23,7 @@ useEffect(() => {
       if(user.email === docSnap.data().email){
                 navigate('/admin/home')
               }else{
-                  navigate('/user/home/page')
+                  navigate('/user/home')
                 }
     } else {
       // User is signed out
@@ -49,7 +49,7 @@ useEffect(() => {
           navigate('/admin/home')
         }else{
             alert( "Login success");
-            navigate('/user/home/page')
+            navigate('/user/home')
           }
         
       })

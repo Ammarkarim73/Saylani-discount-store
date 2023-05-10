@@ -7,6 +7,8 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Link } from 'react-router-dom'
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth"
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 const SignUp = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -20,6 +22,11 @@ const SignUp = () => {
             .then(async (userCredential) => {
                 const user = userCredential.user;
                 const id = user.uid
+                await setDoc(doc(db, "Users", id), {
+                    username: name,
+                    useremail: email,
+                    number: number
+                })
                 alert("SignUp success");
                     navigate('/login');
             })

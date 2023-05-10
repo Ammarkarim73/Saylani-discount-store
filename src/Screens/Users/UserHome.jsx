@@ -10,36 +10,82 @@ import { UserFooter } from '../../Components/index'
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from '../../Firebase/firebase';
 function UserHome() {
-  const [data, setData] = useState([])
-  // let data = [{
-  //   img: { meat },
-  //   Name: 'meat',
-  //   price: 'RS.800-per Kg'
+  // const [data, setData] = useState([])
+  const [active, setActive] = useState('All')
+  let data = [{
+    img: { meat },
+    Name: 'meat',
+    price: 'RS.800-per Kg'
 
-  // },
-  // {
-  //   img: { meat },
-  //   Name: 'meat',
-  //   price: 'RS.800-per Kg'
+  },
+  {
+    img: { meat },
+    Name: 'meat',
+    price: 'RS.800-per Kg'
 
-  // }]
-  const add = () => {
-    alert('add')
+  }]
+  const getData = async (name) => {
+    setActive(name);
+
+    if (name==='All') {
+      const q1 = query(collection(db, 'Fruit'));
+      const querySnapshot1 = await getDocs(q1);
+  
+      querySnapshot1.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            // data = doc.data()
+            // setData([...data,{doc.data()}])
+          });
+
+          // skip
+          
+      const q2 = query(collection(db, 'Vegetable'));
+      const querySnapshot2 = await getDocs(q2);
+  
+      querySnapshot2.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            // data = doc.data()
+            // setData([...data,{doc.data()}])
+          });
+
+          // skip
+      const q3 = query(collection(db, 'Meat'));
+      const querySnapshot3 = await getDocs(q3);
+  
+      querySnapshot3.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            // data = doc.data()
+            // setData([...data,{doc.data()}])
+          });
+
+          // skip
+      const q4 = query(collection(db, 'Grocery Items'));
+      const querySnapshot4 = await getDocs(q4);
+  
+      querySnapshot4.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            // data = doc.data()
+            // setData([...data,{doc.data()}])
+          });
+
+          // skip
+
+    } else {
+      const q = query(collection(db, name));
+      const querySnapshot = await getDocs(q);
+  
+      querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            // data = doc.data()
+            // setData([...data,{doc.data()}])
+          });
+    }
+
   }
-  // let data;
-  const getData = async () => {
-    const q = query(collection(db, "Products"));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // console.log(doc.id, " => ", doc.data());
-      // data = doc.data()
-      setData([...data,{doc?.data()}])
-    });
-  }
-  // console.log("data==>", data)
+
   useEffect(() => {
-    getData()
-  }, [])
+    getData("All")
+  }, [""])
   return (
     <>
       <div className="user_home_page_main_section">
@@ -64,17 +110,25 @@ function UserHome() {
             Shop By Categery
           </div>
           <div className="section_of_category">
-            <div className="categery_box">
+            <div onClick={()=> {getData('All')}} className={active==='All'?"categery_box outlineActiveBlue":"categery_box"}>
               <img src={ShopGrocery} alt="" />
+              <p className='p'>All Categories</p>
             </div>
-            <div className="categery_box">
+            <div onClick={()=> {getData('Fruit')}} className={active==='Fruit'?"categery_box outlineActiveBlue":"categery_box"}>
               <img src={vegetable} alt="" />
+              <p className='p'>Fruits</p>
             </div>
-            <div className="categery_box">
+            <div onClick={()=> {getData('Vegetable')}} className={active==='Vegetable'?"categery_box outlineActiveBlue":"categery_box"}>
               <img src={ShopGrocery} alt="" />
+              <p className='p'>Vegetable</p>
             </div>
-            <div className="categery_box">
+            <div onClick={()=> {getData('Meat')}} className={active==='Meat'?"categery_box outlineActiveBlue":"categery_box"}>
               <img src={ShopGrocery} alt="" />
+              <p className='p'>Meat</p>
+            </div>
+            <div onClick={()=> {getData('Grocery Items')}} className={active==='Grocery Items'?"categery_box outlineActiveBlue":"categery_box"}>
+              <img src={ShopGrocery} alt="" />
+              <p className='p'>Grocery Items</p>
             </div>
           </div>
 
@@ -109,7 +163,9 @@ function UserHome() {
 
 
 
-          {/* <div className="categery_description">
+{/* im opening this ==> */}
+
+          <div className="categery_description">
             <div className="cateries">
               <div className="cateries_image"><img src={meat} alt="" /></div>
               <div className="Description">
@@ -125,7 +181,9 @@ function UserHome() {
               </div>
             </div>
 
-          </div> */}
+          </div>
+
+          {/* this */}
 
         </div>
         <UserFooter />

@@ -249,7 +249,7 @@
   /* background: #d81010; */
   /* box-shadow: 0px 2px 12px 3px #61B846; */
   backdrop-filter: blur(25px);
-  padding: 30px;
+  padding: 15px;
   /* border-radius: 35px; */
 }
 
@@ -314,20 +314,24 @@
 
 }
 
+
 .section_of_category {
   display: flex;
-  justify-content: space-evenly;
+  /* justify-content: space-evenly; */
   overflow: scroll;
   /* flex-wrap: wrap; */
   margin-top: 20px;
+  height: 145px;
 }
 
-::-webkit-scrollbar {
-  display: none;
+.section_of_category>p {
+  text-align: center;
+  display: block;
+  justify-content: center;
 }
 
 .categery_box {
-  border: 2px solid var(--mainGreen);
+  border: 2px solid var(--lightGray);
   padding: 10px;
   border-radius: 10px;
   height: 50px;
@@ -402,9 +406,10 @@
 
 .shopping_proifle {
   width: 30px;
-  float: right;
+  float: left;
   margin-top: -10px;
-  margin-right: 20px;
+  margin-right: 15px;
+  margin-left: 20px;
 }
 
 .shopping_icon {
@@ -593,7 +598,7 @@
   box-shadow: 0px 0px 26px 8px inset gray;
 }
 
-span{
+span {
   cursor: pointer;
 }
 
@@ -706,6 +711,10 @@ span{
   display: flex;
   justify-content: space-evenly;
   margin: 10px 10px;
+  background-color: var(--white);
+  bottom: 0px;
+  height: 100%;
+  position: sticky;
 }
 
 .footer_main_div div {
@@ -726,7 +735,17 @@ span{
   color: var(--mainGreen) !important;
 }
 
-.hidden{
+.outlineActive {
+  border: 2px solid var(--mainGreen) !important;
+  transition: 0.5s linear;
+}
+
+.outlineActiveBlue {
+  border: 2px solid var(--mainColor) !important;
+  transition: 0.5s linear;
+}
+
+.hidden {
   display: none;
 }
 
@@ -740,14 +759,14 @@ span{
   justify-content: center;
 }
 
-.picture{
+.picture {
   width: 125px;
   height: 125px;
   margin: auto auto 10px auto;
   border-radius: 50%;
 }
 
-#showProductPic{
+#showProductPic {
   width: 125px;
   height: 125px;
   margin-bottom: 10px;
@@ -755,13 +774,13 @@ span{
 }
 
 
-.picture:hover{
+.picture:hover {
   content: "See Picture";
   box-shadow: 0px 0px 10px 10px var(--mainColor);
   cursor: pointer;
 }
 
-#label{
+#label {
   width: 170px;
   height: 25px;
   text-align: center;
@@ -775,14 +794,14 @@ span{
   transition: 0.2s linear;
 }
 
-#label:hover{
+#label:hover {
   box-shadow: 0px 0px 8px 3px var(--mainGreen);
   background-color: var(--Light_blue);
   border: 2px solid var(--Light_blue);
   cursor: pointer;
 }
 
-#productLabel{
+#productLabel {
   width: 115px;
   height: 115px;
   /* margin: auto; */
@@ -800,37 +819,41 @@ span{
   align-items: center;
 }
 
-#productLabel:hover{
+#productLabel:hover {
   box-shadow: 0px 0px 8px 3px var(--mainGreen);
   border: 1px solid var(--Light_blue);
   cursor: pointer;
 }
 
-#bms-root{
-  background-color:var(--white);
+#bms-root {
+  background-color: var(--white);
   bottom: 0px;
   height: 100%;
   position: sticky;
 }
 
-.mark{
+.mark {
   border: 2px solid var(--Light_blue);
 }
 
 
-.categoryBar{
+.categoryBar {
   display: flex;
   justify-content: space-between;
 }
 
-.productPrice{
+.productPrice {
   text-align: right;
   width: 100%;
   color: grey;
   font-weight: bold;
 }
 
-.productPrice p{
+.productPrice p {
   margin: 0px;
   margin-right: 5px;
+}
+
+.p {
+  text-align: center;
 }

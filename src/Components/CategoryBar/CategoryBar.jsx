@@ -78,7 +78,7 @@ function CategoryBar(props) {
             >
               <ArrowBackIosNewIcon className={'navbar_icon'} />
             </IconButton>
-            <Typography variant="p" component="div" sx={{ flexGrow: 40 }} >
+            <Typography variant="p" component="div" sx={{ flexGrow: 40, textAlign: "center"}} >
               <span style={{ color: 'blue', fontWeight: 'bold', fontSize: "24px", textAlign: "center" }}>CATEGORIES</span>
             </Typography>
 

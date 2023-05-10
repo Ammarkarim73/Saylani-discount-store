@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import profile from '../../Assets/Images/Profile.png'
 import { Footer, Navbar } from '../../Components/index'
-import {doc, getDoc, updateDoc, } from "firebase/firestore";
+import { doc, getDoc, updateDoc, } from "firebase/firestore";
 import { db } from '../../Firebase/firebase';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { CheckCircleOutline } from '@mui/icons-material';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import Swal from 'sweetalert2';
 
 function AdminProfile() {
   const [fileUrl, setFileUrl] = useState('');
@@ -139,29 +140,36 @@ function AdminProfile() {
         <div className='profile_main_div'>
           <h1 style={{ fontSize: '40px', color: 'blue' }}>Profile</h1>
           <div className="flexcol">
-            <img onClick={() => { window.open(fileUrl) }} src={fileUrl ? fileUrl : profile} id="showPic" className="picture" />
+            <img onClick={() => {
+              Swal.fire({
+                imageUrl: `${fileUrl ? fileUrl : profile}`,
+                imageWidth: 450,
+                imageHeight: 500,
+                showConfirmButton: false,
+              })
+            }} src={fileUrl ? fileUrl : profile} id="showPic" className="picture" />
 
             <div className="input-div one">
-          <div className="i">
-            <CheckCircleOutline className={'mark ' + classActive}
-              onClick={() => {
-                if (name) {
-                  addDataToFirestore(name);
-                } else {
-                  showAlert(true)
-                  setAlertMsg("Name Can't Be Empty !!!")
-                }
-                setClassActive('active');
-              }} />
-          </div>
-          <div className="div">
-            <input type="text" value={name} onChange={(e) => {
-              setName(e.target.value)
-              showAlert(false)
-              setClassActive('')
-            }} className="input" placeholder='<--Update || Enter Your Name' />
-          </div>
-        </div>
+              <div className="i">
+                <CheckCircleOutline className={'mark ' + classActive}
+                  onClick={() => {
+                    if (name) {
+                      addDataToFirestore(name);
+                    } else {
+                      showAlert(true)
+                      setAlertMsg("Name Can't Be Empty !!!")
+                    }
+                    setClassActive('active');
+                  }} />
+              </div>
+              <div className="div">
+                <input type="text" value={name} onChange={(e) => {
+                  setName(e.target.value)
+                  showAlert(false)
+                  setClassActive('')
+                }} className="input" placeholder='<--Update || Enter Your Name' />
+              </div>
+            </div>
 
             <label id="label" htmlFor="file" > + UPLOAD PICTURE
               <input id="file" onChange={(e) => { upload(e.target) }} style={{ display: 'none' }} type="file" accept="image/*" />

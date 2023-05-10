@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlusCircleOutlined, MinusCircleOutlined, ReloadOutlined } from "@ant-design/icons";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { UserFooter } from "../../Components";
 import profile from '../../Assets/Images/Profile.png'
 import DeleteIcon from '@mui/icons-material/Delete';
 import meat from '../../Assets/Images/meat.jpeg'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
 
 function UserShoppingCart() {
+  const navigate = useNavigate('')
+
+  const [fileUrl, setFileUrl] = useState('');
+  // const [classActive, setClassActive] = useState('')
+  const [name, setName] = useState('')
+  const [number, setNumber] = useState('')
+  // const [uid, setuid] = useState('')
+
   const [count, setCount] = useState(0)
   const [clr, setClr] = useState("white")
   function add() {
@@ -20,10 +31,28 @@ function UserShoppingCart() {
   function res() {
     setCount(count - count)
   }
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // setuid(user.uid)
+        const docSnap = await getDoc(doc(db, "Users", user.uid));
+        setFileUrl(docSnap.data().profile)
+        setName(docSnap.data().username)
+        setNumber(docSnap.data().number)
+      } else {
+        // User is signed out
+        // ...
+        navigate('/login');
+      }
+    });
+  }, [""])
+
   return (
     <>
 
-      <img className="shopping_proifle" src={profile} alt="" />
+      <img className="shopping_proifle" src={fileUrl? fileUrl:profile} alt="" />
       <div className="shpping_div">
         <div className="shopping_cart_div">
           <div className="shopping_cart_heading">

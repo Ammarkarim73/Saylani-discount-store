@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import profile from '../../Assets/Images/item.png'
-import { Navbar } from '../../Components'
-import { Footer } from '../../Components/index'
-import { collection, addDoc } from "firebase/firestore";
-import { db } from '../../Firebase/firebase';
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2';
+import { db } from '../../Firebase/firebase';
+import itemImg from '../../Assets/Images/item.png'
+import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useNavigate } from 'react-router-dom';
 
-function AdminAddProducts() {
-  const [fileUrl, setFileUrl] = useState('');
-  const [itemName, setItemName] = useState('')
-  const [dropDown, setDropDown] = useState('')
-  const [description, setDescription] = useState('')
-  const [unitName, setUnitName] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [unitPrice, setPrice] = useState('')
-  // const [alert, showAlert] = useState(false)
-  // const [alertMsg, setAlertMsg] = useState('')
+
+export default function UpdateItem(props) {
+  const navigate = useNavigate('');
+
+  const [fileUrl, setFileUrl] = useState(props.productImg);
+  const [itemName, setItemName] = useState(props.productName)
+  const [dropDown, setDropDown] = useState(props.category)
+  const [description, setDescription] = useState(props.productDesc)
+  const [unitName, setUnitName] = useState(props.productUnitName)
+  const [quantity, setQuantity] = useState(props.productQuantity)
+  const [unitPrice, setPrice] = useState(props.productUnitPrice)
+
+
 
 
   const Toast = Swal.mixin({
@@ -59,6 +63,7 @@ function AdminAddProducts() {
             } else {
 
 
+
               Toast.fire({
                 icon: 'info',
                 title: progress + '% Uploaded'
@@ -82,7 +87,7 @@ function AdminAddProducts() {
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 
-              document.querySelector("#showProductPic").style.backgroundImage = `url(${downloadURL})`;
+              // document.querySelector("#showProductPic").style.backgroundImage = `url(${downloadURL})`;
 
               console.log(resolve(downloadURL));
 
@@ -104,18 +109,16 @@ function AdminAddProducts() {
   const addProduct = async () => {
     let date = new Date()
     if (itemName && dropDown && description && unitName && quantity && unitPrice) {
-      await addDoc(collection(db, dropDown), {
+      await updateDoc(doc(db, dropDown, props.pID), {
         ItemName: itemName,
         ImageUrl: fileUrl,
-        Category: dropDown,
         Description: description,
         UnitName: unitName,
         Quantity: quantity,
         UnitPrice: unitPrice,
         timestamp: date,
-      }) 
+      })
       setItemName('')
-      setDropDown('')
       setDescription('')
       setUnitName('')
       setQuantity('')
@@ -124,8 +127,11 @@ function AdminAddProducts() {
 
       Toast.fire({
         icon: 'success',
-        title: 'Your Item Added Successfully!'
+        title: 'Your Item Updated Successfully!'
       })
+      setTimeout(() => {
+        navigate('/admin/home');
+      }, 3000);
     } else {
       Toast.fire({
         icon: 'error',
@@ -137,25 +143,43 @@ function AdminAddProducts() {
 
 
 
-
   return (
-    <div>
-      <Navbar backBtn={'true'} loc={"Items"} />
+    <>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+          <Toolbar>
+
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ display: { xl: 'block', xs: 'block' } }}
+              onClick={() => { navigate('/admin/home') }}
+            >
+              <ArrowBackIosNewIcon className={'navbar_icon'} />
+            </IconButton>
+            <Typography variant="p" component="div" sx={{ flexGrow: 40 }} >
+              <span style={{ color: 'blue', fontWeight: 'bold', fontSize: "24px", textAlign: "center" }}>Update Item</span>
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <div>
+        </div>
+      </Box>
+      <br />
       <div>
-        <h2 className='Add_item_heading'>Add New Item</h2>
-
-
         {/* Product Image */}
 
         <div className="flexrow">
-          <img id="showProductPic" onClick={() => { 
+          <img id="showProductPic" onClick={() => {
             Swal.fire({
-              imageUrl: `${fileUrl ? fileUrl : profile}`,
+              imageUrl: `${fileUrl ? fileUrl : itemImg}`,
               imageWidth: 450,
               imageHeight: 450,
               showConfirmButton: false,
             })
-             }} src={fileUrl ? fileUrl : profile} />
+          }} src={fileUrl ? fileUrl : itemImg} />
 
 
           <label id="productLabel" htmlFor="file" > +
@@ -166,16 +190,7 @@ function AdminAddProducts() {
         {/* Product Image */}
 
         <div className='inputs_div'>
-          <input value={itemName} maxLength={20} type="text" onChange={(e) => { setItemName(e.target.value) }} id='itemName' className='inp' placeholder='Item Name' />
-        </div>
-        <div className='inputs_div'>
-          <select value={dropDown} className='inp' onChange={(e) => { setDropDown(e.target.value) }} id='dropDown' >
-            <option>Select Category</option>
-            <option value='Meat'>Meat</option>
-            <option value="Grocery Items">Grocery Items</option>
-            <option value="Fruit">Fruit</option>
-            <option value="Vegetable">Vegetable</option>
-          </select>
+          <input value={itemName} type="text" onChange={(e) => { setItemName(e.target.value) }} id='itemName' className='inp' placeholder='Item Name' />
         </div>
         <div className='inputs_div'>
           <textarea value={description} onChange={(e) => { setDescription(e.target.value) }} className='text_area' id='description' placeholder='Description this Item' rows="6" cols="50" />
@@ -193,19 +208,16 @@ function AdminAddProducts() {
         </div>
         <div className='unit_name_div'>
           <span style={{ color: 'blue', fontSize: '25px' }}>Quantity:</span>
-          <input value={quantity} maxLength={5} onChange={(e) => { setQuantity(e.target.value) }} id='quantity' type="number" className='inp unit_inp' placeholder='eg. 2 Kg, 4 kg' />
+          <input value={quantity} onChange={(e) => { setQuantity(e.target.value) }} id='quantity' type="number" className='inp unit_inp' placeholder='eg. 2 Kg, 4 kg' />
         </div>
         <div className='unit_name_div'>
           <span style={{ color: 'blue', fontSize: '25px' }}>Unit Price:</span>
-          <input value={unitPrice} maxLength={8} onChange={(e) => { setPrice(e.target.value) }} id='unitPrice' type="number" className='inp unit_inp' placeholder='Pkr' />
+          <input value={unitPrice} onChange={(e) => { setPrice(e.target.value) }} id='unitPrice' type="number" className='inp unit_inp' placeholder='Pkr' />
         </div>
         <div className="signup_button_div" style={{ margin: '20px auto', textAlign: 'center' }}>
           <button className='get_Started_button' style={{ color: 'white' }} onClick={() => { addProduct() }}>Add Product</button>
         </div>
       </div>
-      <Footer />
-    </div >
+    </>
   )
 }
-
-export default AdminAddProducts
