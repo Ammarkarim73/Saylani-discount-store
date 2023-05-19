@@ -6,7 +6,7 @@ import profile from '../../Assets/Images/Profile.png'
 import DeleteIcon from '@mui/icons-material/Delete';
 import meat from '../../Assets/Images/meat.jpeg'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 
 function UserShoppingCart() {
@@ -22,17 +22,44 @@ function UserShoppingCart() {
   const [clr, setClr] = useState("white")
   function add() {
     setCount(count + 1)
-    setClr("white")
+    setClr("red")
   }
   function sub() {
     setCount(count - 1)
 
   }
-  function res() {
-    setCount(count - count)
+  const abc = async () => {
+    const docSnap1 = await getDocs(query(collection(db, 'Fruit')));
+    const docSnap2 = await getDocs(query(collection(db, 'Meat')));
+    const docSnap3 = await getDocs(query(collection(db, 'Grocery Items')));
+    const docSnap4 = await getDocs(query(collection(db, 'Vegetable')));
+
+    docSnap1.forEach((doc)=> {
+      console.log(doc._key.path.segments[6])
+      console.log(JSON.parse(localStorage.getItem(`${doc._key.path.segments[6]}`)))
+    })
+
+    docSnap2.forEach((doc)=> {
+      console.log(doc._key.path.segments[6])
+      console.log(localStorage.getItem(`${doc._key.path.segments[6]}`))
+    })
+
+    docSnap3.forEach((doc)=> {
+      console.log(doc._key.path.segments[6])
+      console.log(localStorage.getItem(`${doc._key.path.segments[6]}`))
+    })
+
+    docSnap4.forEach((doc)=> {
+      console.log(doc._key.path.segments[6])
+      console.log(localStorage.getItem(`${doc._key.path.segments[6]}`))
+    })
+
   }
 
+  window.abc = abc;
+
   useEffect(() => {
+    abc()
     const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -117,10 +144,10 @@ function UserShoppingCart() {
           <div className="total_amount">$ 185.500</div>
         </div>
 
-        <input type="password" className="input shop_input" placeholder='Enter Full Name'/>
-        <input type="password" className="input shop_input" placeholder='Enter Email'/>
-        <input type="password" className="input shop_input" placeholder='Enter Phone Number'/>
-        <textarea type="password" className="input shop_input" placeholder='Enter shipping address'></textarea>
+        <input type="text" className="input shop_input" placeholder='Enter Full Name'/>
+        <input type="text" className="input shop_input" placeholder='Enter Email'/>
+        <input type="text" className="input shop_input" placeholder='Enter Phone Number'/>
+        <input type="text" className="input shop_input" placeholder='Enter shipping address'></input>
 
         <div className="order_button_div">
           <button className='order_button'> <Link to=''className='link'  > Place Order</Link> </button>
