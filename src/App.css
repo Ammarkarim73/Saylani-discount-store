@@ -480,6 +480,8 @@
   justify-content: center;
   margin: 20px;
   padding: 20px;
+  border: 1px solid var(--mainGreen);
+  border-radius: 20px;
 }
 
 .total {
@@ -860,4 +862,15 @@ span {
 
 button:disabled {
   cursor: not-allowed;
+}
+
+.shoppingItemsMain {
+  overflow: scroll;
+  width: 100%;
+  height: 400px;
+}
+
+.flexCol{
+  display: flex;
+  flex-direction: column;
 }
