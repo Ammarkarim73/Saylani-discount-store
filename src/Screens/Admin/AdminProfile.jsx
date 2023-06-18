@@ -15,6 +15,18 @@ function AdminProfile() {
   const [alertMsg, setAlertMsg] = useState('')
   const [name, setName] = useState('')
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
+
 
 
   const upload = async (fileList) => {
@@ -94,8 +106,10 @@ function AdminProfile() {
   const signout = () => {
     const auth = getAuth();
     signOut(auth).then(() => {
-      showAlert(true)
-      setAlertMsg("Signed Out Successfully..!")
+      Toast.fire({
+        icon: 'success',
+        title: 'Signed Out Successfully..!'
+      })
     }).catch((error) => {
       console.log(error.message);
       // An error happened.

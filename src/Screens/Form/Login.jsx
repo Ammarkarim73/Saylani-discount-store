@@ -6,12 +6,25 @@ import { Link,useNavigate } from 'react-router-dom'
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { db } from "../../firebase";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [classActive, setClassActive] = useState('')
   const navigate = useNavigate()
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
 
 
 useEffect(() => {
@@ -45,10 +58,16 @@ useEffect(() => {
         const docRef = doc(db, "Redirect", "data");
         const docSnap = await getDoc(docRef);
         if(user.email === docSnap.data().email){
-          alert( "Login success");
+          Toast.fire({
+            icon: 'success',
+            title: 'Loged In Successfully..!'
+          });
           navigate('/admin/home')
         }else{
-            alert( "Login success");
+          Toast.fire({
+            icon: 'success',
+            title: 'Loged In Successfully..!'
+          });
             navigate('/user/home')
           }
         

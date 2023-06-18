@@ -8,6 +8,7 @@ import meat from '../../Assets/Images/meat.jpeg'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
+import itemImg from '../../Assets/Images/item.png'
 
 function UserShoppingCart() {
   const navigate = useNavigate('')
@@ -18,13 +19,36 @@ function UserShoppingCart() {
   const [number, setNumber] = useState('')
   // const [uid, setuid] = useState('')
 
-  const [count, setCount] = useState(1)
-const add = () => {
-    setCount(count + 1)
+  // const [price, setPrice] = useState(0)
+  let price= []
+
+const add = (e) => {
+  let value = +e.target.nextElementSibling.firstElementChild.innerText + 1;
+  e.target.nextElementSibling.firstElementChild.innerHTML = value;
+
+  e.target.nextElementSibling.firstElementChild.innerText <= '1' ?
+  e.target.nextElementSibling.nextElementSibling.disabled = true :
+  e.target.nextElementSibling.nextElementSibling.disabled = false;
+
+  e.target.nextElementSibling.firstElementChild.innerText >= 20 ?
+  e.target.disabled = true :
+  e.target.disabled = false;
+    
   }
   window.add = add;
-const sub = () => {
-    setCount(count - 1)
+const sub = (e) => {
+  let value = e.target.previousElementSibling.firstElementChild.innerText - 1;
+  e.target.previousElementSibling.firstElementChild.innerHTML = value;
+
+  e.target.previousElementSibling.firstElementChild.innerHTML >= 20 ? 
+  e.target.previousElementSibling.previousElementSibling.disabled = true : 
+  e.target.previousElementSibling.previousElementSibling.disabled = false;
+
+  e.target.previousElementSibling.firstElementChild.innerHTML <= '1'? 
+  e.target.disabled = true : 
+  e.target.disabled = false;
+
+  
   }
   window.sub = sub;
   const abc = async () => {
@@ -40,25 +64,32 @@ const sub = () => {
       } else {
         let div = `<div class="shooping_cart_images_main_div">
         <div class="shopping_image">
-          <img src="${abc.ImageUrl}" alt="" />
+          <img src="${abc.ImageUrl?abc.ImageUrl:itemImg}" alt="" />
           <div class="flexCol">
           <h3>${abc.ItemName}</h3>
           <p>Quantity: ${abc.Quantity} ${abc.UnitName}</p>
+          <p class="ammount">RS: ${abc.UnitPrice}</p>
           </div>
+
+          <div class="flexCol">
+
+          <p>KG / Dozen / Pieces</p>
+
           <div class="counter_main">
-
-            <button class='counter_button' onClick="add()">+</button>
-            <span type="text" ><p class='number'>${count}</p></span>
-            <button class='counter_button' onClick="sub()">-</button>
-
-          </div>
+            <button class='counter_button' onClick="add(event)">+</button>
+            <span type="text" ><p class='number'>1</p></span>
+            <button disabled class='counter_button' onClick="sub(event)">-</button>
+            </div>
+            
+            </div>
 
         </div>
-        <div class="ammount">RS: ${abc.UnitPrice}</div>
+       
 
       </div>`
         console.log(abc)
         document.getElementById('cartItem').innerHTML += div;
+        price.push(abc.UnitPrice);
       }
     })
 
@@ -67,7 +98,34 @@ const sub = () => {
       if (abc === null) {
 
       } else {
+        let div = `<div class="shooping_cart_images_main_div">
+        <div class="shopping_image">
+          <img src="${abc.ImageUrl?abc.ImageUrl:itemImg}" alt="" />
+          <div class="flexCol">
+          <h3>${abc.ItemName}</h3>
+          <p>Quantity: ${abc.Quantity} ${abc.UnitName}</p>
+          <p class="ammount">RS: ${abc.UnitPrice}</p>
+          </div>
+
+          <div class="flexCol">
+
+          <p>KG / Dozen / Pieces</p>
+
+          <div class="counter_main">
+            <button class='counter_button' onClick="add(event)">+</button>
+            <span type="text" ><p class='number'>1</p></span>
+            <button disabled class='counter_button' onClick="sub(event)">-</button>
+            </div>
+            
+            </div>
+
+        </div>
+       
+
+      </div>`
         console.log(abc)
+        document.getElementById('cartItem').innerHTML += div;
+        price.push(abc.UnitPrice);
       }
     })
 
@@ -76,7 +134,34 @@ const sub = () => {
       if (abc === null) {
 
       } else {
+        let div = `<div class="shooping_cart_images_main_div">
+        <div class="shopping_image">
+          <img src="${abc.ImageUrl?abc.ImageUrl:itemImg}" alt="" />
+          <div class="flexCol">
+          <h3>${abc.ItemName}</h3>
+          <p>Quantity: ${abc.Quantity} ${abc.UnitName}</p>
+          <p class="ammount">RS: ${abc.UnitPrice}</p>
+          </div>
+
+          <div class="flexCol">
+
+          <p>KG / Dozen / Pieces</p>
+
+          <div class="counter_main">
+            <button class='counter_button' onClick="add(event)">+</button>
+            <span type="text" ><p class='number'>1</p></span>
+            <button disabled class='counter_button' onClick="sub(event)">-</button>
+            </div>
+            
+            </div>
+
+        </div>
+       
+
+      </div>`
         console.log(abc)
+        document.getElementById('cartItem').innerHTML += div;
+        price.push(abc.UnitPrice);
       }
     })
 
@@ -85,7 +170,34 @@ const sub = () => {
       if (abc === null) {
 
       } else {
+        let div = `<div class="shooping_cart_images_main_div">
+        <div class="shopping_image">
+          <img src="${abc.ImageUrl?abc.ImageUrl:itemImg}" alt="" />
+          <div class="flexCol">
+          <h3>${abc.ItemName}</h3>
+          <p>Quantity: ${abc.Quantity} ${abc.UnitName}</p>
+          <p class="ammount">RS: ${abc.UnitPrice}</p>
+          </div>
+
+          <div class="flexCol">
+
+          <p>KG / Dozen / Pieces</p>
+
+          <div class="counter_main">
+            <button class='counter_button' onClick="add(event)">+</button>
+            <span type="text" ><p class='number'>1</p></span>
+            <button disabled class='counter_button' onClick="sub(event)">-</button>
+            </div>
+            
+            </div>
+
+        </div>
+       
+
+      </div>`
         console.log(abc)
+        document.getElementById('cartItem').innerHTML += div;
+        price.push(abc.UnitPrice);
       }
     })
 
@@ -129,43 +241,10 @@ const sub = () => {
           
         </div>
 
-        {/* <div className="shooping_cart_images_main_div">
-          <div className="shopping_image">
-            <img src={meat} alt="" />
-            <h3>item image</h3>
-            <div className="counter_main">
 
-              <button className='counter_button' onClick={add}><PlusCircleOutlined /></button>
-              <span type="text" ><p className='number' style={{ color: clr }}>{count}</p></span>
-              <button className='counter_button' onClick={sub}><MinusCircleOutlined /></button>
-
-            </div>
-
-          </div>
-          <div className="ammount">$23.00</div>
-
-        </div>
-        <div className="shooping_cart_images_main_div">
-          <div className="shopping_image">
-            <img src={meat} alt="" />
-            <h3>item image</h3>
-            <div className="counter_main">
-
-              <button className='counter_button' onClick={add}><PlusCircleOutlined /></button>
-              <span type="text" ><p className='number' style={{ color: clr }}>{count}</p></span>
-              <button className='counter_button' onClick={sub}><MinusCircleOutlined /></button>
-
-            </div>
-
-          </div> 
-          <div className="ammount">$23.00</div>
-
-
-
-        </div>*/}
         <div className="total">
           <div className="total_heading">Total</div>
-          <div className="total_amount">$ 185.500</div>
+          <div className="total_amount"></div>
         </div>
 
         <input type="text" className="input shop_input" placeholder='Enter Full Name' />

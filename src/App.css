@@ -436,6 +436,7 @@
 
 .shopping_image>img {
   width: 100px;
+  height: 120px;
   border-radius: 20px;
   margin-right: 20px;
 }
@@ -461,9 +462,9 @@
   border: none;
   padding: 8px;
   border-radius: 10px;
-  /* background-color: var(--mainGreen); */
-  /* color: var(--white); */
-
+  background-color: var(--mainGreen);
+  color: var(--white);
+  cursor: pointer;
 }
 
 .number {
@@ -472,7 +473,9 @@
   width: 30px;
   height: 20px;
   text-align: center;
-  padding-bottom: 6px;
+  padding: 3px 0px 3px 0px;
+  display: grid;
+  align-items: center;
 }
 
 .shooping_cart_images_main_div {
@@ -602,6 +605,8 @@
 
 span {
   cursor: pointer;
+  display: flex;
+    align-items: center;
 }
 
 .product_main_div {
@@ -873,4 +878,9 @@ button:disabled {
 .flexCol{
   display: flex;
   flex-direction: column;
+}
+
+p{
+  font-size: small;
+    margin: 5px 5px 5px 5px;
 }
